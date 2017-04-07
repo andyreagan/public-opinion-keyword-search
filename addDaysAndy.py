@@ -26,6 +26,7 @@ from numpy import zeros,savetxt
 from numpy import nonzero
 from scipy.sparse import lil_matrix,issparse,csr_matrix
 import cPickle as pickle
+from subprocess import call
 
 import glob
 from datetime import datetime,timedelta
@@ -53,10 +54,21 @@ def add_day(day):
         
     pickle.dump(day_matrix.tolil(), open( output_filename, "wb" ) ,pickle.HIGHEST_PROTOCOL)
     
+def zip_day(day):
+    call("zip keywords/{0}.zip keywords/{0}-*".format(day.strftime("%Y-%m-%d")),shell=True)
+    call("lz4 -9f keywords/{0}.dat keywords/{0}.lz4".format(day.strftime("%Y-%m-%d")),shell=True)
+    call("\\rm keywords/{0}*.dat".format(day.strftime("%Y-%m-%d")),shell=True)
+
+def unzip_day(day):
+    call("unzip keywords/{0}.zip".format(day.strftime("%Y-%m-%d")),shell=True)
+    
 if (__name__ == '__main__'):
 
     day = datetime.strptime(sys.argv[1],'%Y-%m-%d')
     print(day)
+    if isfile("keywords/{0}.zip".format(day.strftime("%Y-%m-%d"))):
+        unzip_day(day)
     add_day(day)
+    zip_day(day)
 
 

@@ -10,7 +10,7 @@ import time
 jobs = int(subprocess.check_output("showq | grep areagan | wc -l",shell=True))
 print(jobs)
 
-max_jobs = 150
+max_jobs = 100
 jobs_remaining = max_jobs - jobs
 
 loop_counter = 0
@@ -25,7 +25,7 @@ while jobs_remaining > batch_size:
     date = datetime.datetime.strptime(tmp,'%Y-%m-%d')
     date += datetime.timedelta(days=1)
 
-    if date > datetime.datetime.now():
+    if date > datetime.datetime(2015,11,23):
         print('date past search range')
         break
     
@@ -56,7 +56,7 @@ while jobs_remaining > batch_size:
 #PBS -N keywordScrapeAdd
 #PBS -j oe
 
-cd /users/a/r/areagan/fun/twitter/keyword-searches/2015-11-ambient-bonanza
+cd /users/a/r/areagan/scratch/2015-11-ambient-bonanza
 
 /usr/bin/time -v python addDaysAndy.py {0}
 
