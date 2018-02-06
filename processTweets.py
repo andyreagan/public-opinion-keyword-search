@@ -25,10 +25,10 @@ my_LabMT = LabMT(stopVal=0.0)
 
 from numpy import zeros,savetxt
 from numpy import nonzero
-from scipy.sparse import lil_matrix,issparse
-import cPickle as pickle
+from scipy.sparse import lil_matrix, issparse, csr_matrix
+import pickle
 
-def tweetreader(tweet,my_result):
+def tweetreader(tweettext, my_result):
     # takes in the hashtag-stripped text
     # the keyword list
     # and the title of the file to append to
@@ -45,8 +45,7 @@ def tweetreader(tweet,my_result):
     #         # print("no match for {0}".format(keyword["folder"]))
 
     # with 10000 keywords, better to iterate the other way around
-    tweettext = tweet["text"]
-    # print(tweettext)
+
     replaceStrings = ["---","--","''"]
     for replaceString in replaceStrings:
         tweettext = tweettext.replace(replaceString," ")
@@ -64,9 +63,10 @@ def tweetreader(tweet,my_result):
     #             my_result[i,:] += tweet_wordvec
     # (of course, could vectorize further)
     # simple operations are fast
-    for i in nonzero(tweet_wordvec)[0]:
-        my_result[i,:] += tweet_wordvec
+    # for i in nonzero(tweet_wordvec)[0]:
+    #     my_result[i,:] += tweet_wordvec
     # my_result[nonzero(tweet_wordvec)[0],:] += tweet_wordvec
+    my_result[(tweet_wordvec > 0),:] += tweet_wordvec
     # print(".")
 
 def gzipper(my_result):
@@ -74,12 +74,14 @@ def gzipper(my_result):
     for line in f:
         try:
             tweet = loads(line)
+            if "text" in tweet:
+                # print("found text")
+                # print(".", end="")
+                tweetreader(tweet["text"], my_result)
+            elif "body" in tweet:
+                tweetreader(tweet["body"], my_result)
         except:
-            print "failed to load a tweet"
-        if "text" in tweet:
-            # print("found text")
-            # print(".", end="")
-            tweetreader(tweet,my_result)
+            print("failed to load a tweet")
 
 def makefolders():
     from os import mkdir
@@ -88,8 +90,9 @@ def makefolders():
 
 if __name__ == "__main__":
     keywords = my_LabMT.wordlist
-    my_result = zeros((len(keywords),len(keywords)))
-    # my_result = lil_matrix((len(keywords),len(keywords)), dtype='i')
+    # my_result = zeros((len(keywords),len(keywords)))
+    # my_result = csr_matrix((len(keywords),len(keywords)), dtype='i')
+    my_result = lil_matrix((len(keywords),len(keywords)), dtype='i')
 
     # load the things
     outfile = sys.argv[1]
@@ -98,10 +101,11 @@ if __name__ == "__main__":
 
     print("saving...")
 
-    if not issparse(my_result):
-        my_result = lil_matrix(my_result,dtype="i")
+    # if not issparse(my_result):
+    #     my_result = lil_matrix(my_result,dtype="i")
+
     f = open(outfile,"wb")
-    pickle.dump(my_result,f,pickle.HIGHEST_PROTOCOL)
+    pickle.dump(my_result, f)
     f.close()
     # savetxt(outfile,my_result,fmt="%.0f",delimiter=",")
     
