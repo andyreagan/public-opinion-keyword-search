@@ -5,6 +5,7 @@
 import datetime
 import sys
 import subprocess
+import os
 import time
 
 jobs = int(subprocess.check_output("showq | grep areagan | wc -l",shell=True))
@@ -36,6 +37,9 @@ while jobs_remaining > batch_size:
     tmp = f.write(date.strftime('%Y-%m-%d'))
     f.close()
 
+    if not os.path.isdir(os.path.join("keywords", date.strftime('%Y-%m-%d'))):
+        os.mkdir(os.path.join("keywords", date.strftime('%Y-%m-%d')))
+
     for hour in range(24):
         job='''#PBS -l nodes=1:ppn=1
 #PBS -l walltime=02:00:00
@@ -46,10 +50,10 @@ cd /users/a/r/areagan/scratch/2015-11-ambient-bonanza
 
 echo "processing {0}-{1:02d}"
 python3=/users/a/r/areagan/scratch/realtime-parsing/RHEL7-python-3.5.1/bin/python
-/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-00.gz | $python3 processTweets.py "keywords/{0}-{1:02d}-00.dat"
-/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-15.gz | $python3 processTweets.py "keywords/{0}-{1:02d}-15.dat"
-/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-30.gz | $python3 processTweets.py "keywords/{0}-{1:02d}-30.dat"
-/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-45.gz | $python3 processTweets.py "keywords/{0}-{1:02d}-45.dat"
+/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-00.gz | $python3 processTweets.py "keywords/{0}/{0}-{1:02d}-00.pkl"
+/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-15.gz | $python3 processTweets.py "keywords/{0}/{0}-{1:02d}-15.pkl"
+/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-30.gz | $python3 processTweets.py "keywords/{0}/{0}-{1:02d}-30.pkl"
+/usr/bin/time -v gzip -cd /users/c/d/cdanfort/scratch/twitter/tweet-troll/zipped-raw/{0}/{0}-{1:02d}-45.gz | $python3 processTweets.py "keywords/{0}/{0}-{1:02d}-45.pkl"
 
 echo "delete me"'''.format(date.strftime('%Y-%m-%d'),hour)
 
