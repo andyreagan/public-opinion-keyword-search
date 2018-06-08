@@ -2,3 +2,6 @@ keywords-backup
 keywords
 keywordScrape.*
 output
+cron.out
+currdate.txt
+currdate-add.txt
