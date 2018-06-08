@@ -22,7 +22,8 @@ sys.path.append("/users/a/r/areagan/work/2014/03-labMTsimple/")
 from labMTsimple.speedy import *
 from labMTsimple.storyLab import *
 my_LabMT = LabMT(stopVal=0.0)
-
+my_LabMT.data["opioid"] = [len(my_LabMT.data)]
+my_LabMT.data["opioids"] = [len(my_LabMT.data)]
 from numpy import zeros,savetxt
 from numpy import nonzero
 from scipy.sparse import lil_matrix, issparse, csr_matrix
