@@ -11,7 +11,8 @@ import time
 jobs = int(subprocess.check_output("showq | grep areagan | wc -l",shell=True))
 print(jobs)
 
-max_jobs = 150
+max_jobs = 800
+# max_jobs = 150
 jobs_remaining = max_jobs - jobs
 
 loop_counter = 0
@@ -42,7 +43,7 @@ while jobs_remaining > batch_size:
 
     for hour in range(24):
         job='''#PBS -l nodes=1:ppn=1
-#PBS -l walltime=02:00:00
+#PBS -l walltime=10:00:00
 #PBS -N keywordScrape
 #PBS -j oe
 
@@ -57,7 +58,8 @@ python3=/users/a/r/areagan/scratch/realtime-parsing/RHEL7-python-3.5.1/bin/pytho
 
 echo "delete me"'''.format(date.strftime('%Y-%m-%d'),hour)
 
-        subprocess.call("echo '{0}' | qsub -qshortq".format(job),shell=True)
+        # subprocess.call("echo '{0}' | qsub -qshortq".format(job),shell=True)
+        subprocess.call("echo '{0}' | qsub".format(job),shell=True)
         time.sleep(0.1)
         
     jobs_remaining -= batch_size
