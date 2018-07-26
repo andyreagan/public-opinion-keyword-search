@@ -43,7 +43,7 @@ while jobs_remaining > batch_size:
 
     for hour in range(24):
         job='''#PBS -l nodes=1:ppn=1
-#PBS -l walltime=10:00:00
+#PBS -l walltime=30:00:00
 #PBS -N keywordScrape
 #PBS -j oe
 
