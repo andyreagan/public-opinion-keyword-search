@@ -1,7 +1,7 @@
 # coding: utf-8
 import datetime
 import os
-start = datetime.datetime(2008,9,1)
+start = datetime.datetime(2008,9,13)
 dt = datetime.timedelta(minutes=15)
 # curr = datetime.datetime.now()
 # curr=curr-datetime.timedelta(days=7)
