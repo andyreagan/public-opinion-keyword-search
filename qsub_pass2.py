@@ -21,7 +21,8 @@ loop_counter = 0
 batch_size = 1
 
 end = datetime.datetime(2018,7,24)
-start = datetime.datetime(2008,9,13)
+end = datetime.datetime.now()
+start = datetime.datetime(2018,7,13)
 curr = start
 dt = datetime.timedelta(minutes=15)
 while curr < end and jobs_remaining > batch_size:
