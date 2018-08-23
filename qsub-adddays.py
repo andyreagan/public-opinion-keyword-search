@@ -7,7 +7,7 @@ import sys
 import subprocess
 import time
 
-jobs = int(subprocess.check_output("showq | grep areagan | wc -l",shell=True))
+jobs = int(subprocess.check_output("qstat | grep keywordScrapeAdd | wc -l",shell=True))
 print(jobs)
 
 max_jobs = 100
@@ -25,7 +25,7 @@ while jobs_remaining > batch_size:
     date = datetime.datetime.strptime(tmp,'%Y-%m-%d')
     date += datetime.timedelta(days=1)
 
-    if date > datetime.datetime(2015,11,23):
+    if date > datetime.datetime.now():
         print('date past search range')
         break
     
@@ -57,8 +57,9 @@ while jobs_remaining > batch_size:
 #PBS -j oe
 
 cd /users/a/r/areagan/scratch/2015-11-ambient-bonanza
+python3=/users/a/r/areagan/scratch/realtime-parsing/RHEL7-python-3.5.1/bin/python
 
-/usr/bin/time -v python addDaysAndy.py {0}
+/usr/bin/time -v $python3 addDaysAndy.py {0}
 
 echo "delete me"'''.format(date.strftime('%Y-%m-%d'))
 

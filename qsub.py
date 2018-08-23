@@ -8,7 +8,7 @@ import subprocess
 import os
 import time
 
-jobs = int(subprocess.check_output("showq | grep areagan | wc -l",shell=True))
+jobs = int(subprocess.check_output("qstat | grep keywordScrape | wc -l",shell=True))
 print(jobs)
 
 max_jobs = 800
