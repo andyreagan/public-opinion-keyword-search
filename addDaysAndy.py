@@ -28,6 +28,7 @@ from labMTsimple.storyLab import *
 my_LabMT = LabMT(stopVal=0.0)
 my_LabMT.data["opioid"] = [len(my_LabMT.data)]
 my_LabMT.data["opioids"] = [len(my_LabMT.data)]
+import os
 from os.path import isfile,abspath,isdir
 from numpy import zeros,savetxt
 from numpy import nonzero
@@ -56,7 +57,20 @@ def add_day(day):
         print(filename)
         if not isfile(filename):
             continue
-        curr_matrix = pickle.load(gzip.open(filename, "rb"))
+        try:
+            curr_matrix = pickle.load(gzip.open(filename, "rb"))
+        except EOFError:
+            with open("EOF-errors.txt","a") as f:
+                f.write(filename)
+                f.write("\n")
+            continue
+            os.remove(filename)
+        except:
+            with open("other-errors.txt","a") as f:
+                f.write(filename)
+                f.write("\n")
+            os.remove(filename)
+            continue
             
         # add current matrix to day_matrix (both sparse)
         day_matrix = day_matrix + curr_matrix.tocsr()
