@@ -26,8 +26,8 @@ start = datetime.datetime(2018,7,13)
 curr = start
 dt = datetime.timedelta(minutes=15)
 while curr < end and jobs_remaining > batch_size:
-    if not os.path.isdir(os.path.join("keywords", date.strftime('%Y-%m-%d'))):
-        os.mkdir(os.path.join("keywords", date.strftime('%Y-%m-%d')))
+    if not os.path.isdir(os.path.join("keywords", curr.strftime('%Y-%m-%d'))):
+        os.mkdir(os.path.join("keywords", curr.strftime('%Y-%m-%d')))
     f = curr.strftime("%Y-%m-%d/%Y-%m-%d-%H-%M")
     if not os.path.isfile("keywords/"+f+".pkl"):
         job='''#PBS -l nodes=1:ppn=1
